@@ -1,1 +1,20 @@
-test
+
+
+h2. インストール
+
+#install nodejs
+#install mongodb
+
+h2. mongoDB 初期設定
+#mongodb setting
+sudo mkdir -p /data/db/
+sudo chown `id -u` /data/db
+mongod
+
+h2. 必要なライブラリー
+npm install socket.io
+npm install mongoose
+
+#expressプロジェクト作成
+cd /Users/johann/Desktop/
+express install -t ejs chat

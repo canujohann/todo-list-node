@@ -1,16 +1,14 @@
 /**
  * Module dependencies.
  */
-
 var express = require('express')
   , routes = require('./routes')
   , mongoose = require('mongoose');
 
-var app = module.exports = express.createServer();
 
 // Express Configuration
+var app = module.exports = express.createServer();
 app.configure(function(){
-
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
   
@@ -20,7 +18,6 @@ app.configure(function(){
   app.use(express.session({ secret: 'your secret here' }));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
-
 });
 
 //In development mode, displays errors content
@@ -36,6 +33,7 @@ app.configure('production', function(){
 
 // Routes
 app.get('/', routes.index);
+
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
@@ -68,24 +66,32 @@ io.sockets.on('connection', function (socket) {
   console.log('connected');
 
   socket.on('msg send', function (msg) {
-    socket.emit('msg push', msg);
-    socket.broadcast.emit('msg push', msg);
-
+    
     //DBに登録
     var user = new User();
     user.message  = msg;
     user.date = new Date();
     user.save(function(err) {
-      if (err) { console.log(err); }
+
+      if (err) { 
+        console.log(err); 
+      }else{
+        socket.emit('msg push', user);
+        socket.broadcast.emit('msg push', msg);
+      }
+
     });
+
     
+
+
   });
 
   //DBにあるメッセージを削除
-  socket.on('deleteDB', function(){
-    socket.emit('db drop');
-    socket.broadcast.emit('db drop');
-    User.find().remove();
+  socket.on('deleteDB', function(userId){
+    socket.emit('db drop',userId);
+    socket.broadcast.emit('db drop',userId);
+    User.find({_id: userId}).remove();
   });
 
   socket.on('disconnect', function() {

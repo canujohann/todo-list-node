@@ -1,10 +1,33 @@
-<h1><%= title %></h1>
+<section>
 
-<p>Welcome to <%= title %></p>
+ 	<div class="container">
+      	<div class="row">
+			<div class="col-sm-8">
 
 
 
-<input type="text" name="message" id="message" />
-<button id="btn">送信</button>
+				<h1><%= title %></h1>
 
-<dl id="list"></dl>
+				<p> My todo list in nodejs/express/mongodb </p>
+
+
+				<form role="form" class="form-inline">
+
+					<label for="message">Message</label>
+					<input class="form-control" type="text" name="message" id="message">
+					
+					<div class="btn btn-primary" id="btn">送信</div>
+
+				</form>
+
+				<br/><br/>
+
+				<table id="list" class="table"></table>
+
+
+
+
+			</div>
+		</div>
+	</div>
+</section>

@@ -44,26 +44,37 @@ $(function() {
 
 
  function addOneRow(user){
+  var dat = new Date(user.date);//.format("YYYY-MM-DD HH:mm")
+  var month = dat.getMonth()+1;
+  var day = dat.getDate();
+
+  var dat_display = month + "/" + day ;
+
   return '<tr>'+
-      '<td>' + user.date + '</td>'+
+      '<td>' + dat_display + '</td>'+
       '<td>' + user.message + '</td>'+
-      '<td><div class="btn btn-danger" onclick="deleteMemo(\''+user._id+'\')" >DELETE</div></td>'+
+      '<td><div class="btn btn-danger" id="'+user._id+'" >DELETE</div></td>'+
       '</tr>'; 
  }
 
 
   //-------------
-  // TODO set with jquery
-  // Delete memo (send)
-  function deleteMemo(id){ 
-    alert(id);
-    //socket.emit('deleteDB', id);
-  }
+
+  $("#list > tbody > tr > td > div").live('click', function(){
+    var id = $(this).attr("id") ;
+    socket.emit('delete msg', id);
+  });
 
   //Delete memo (receive)
   socket.on('db drop', function(id){
-    alert(id);
-    //$('#list').empty();
+    $("#list > tbody > tr").each(function(){
+      var div_id = $(this).find("td > div").attr("id");
+      if(id == div_id){
+        $(this).remove();
+      }
+    });
+
+
   });
 
 });

@@ -82,19 +82,22 @@ io.sockets.on('connection', function (socket) {
 
     });
 
-    
-
-
   });
 
   //DBにあるメッセージを削除
-  socket.on('deleteDB', function(userId){
-    socket.emit('db drop',userId);
-    socket.broadcast.emit('db drop',userId);
-    User.find({_id: userId}).remove();
+  socket.on('delete msg', function(userId){
+
+    User.findOne( {'_id': userId}, function(err,doc){
+      doc.remove();
+      socket.emit('db drop', userId);
+      socket.broadcast.emit('db drop', userId);
+    });
+    
+    
   });
 
   socket.on('disconnect', function() {
     console.log('disconnected');
   });
+
 });

@@ -1,9 +1,9 @@
 
 
-#　Todo List (nodejs, express , mongoDB)　##
+#　Todo List (express,mongoDB)　##
 
 
-## mongoDB settings　###
+## MongoDB settings　###
 
 
 create if not exists
@@ -17,23 +17,16 @@ start mongodb
 mongod
 ```
 
-## install librairies　##
+## Install librairies　##
 
 ```
 npm install socket.io
 npm install mongoose
 ```
 
-##　Create a new express project　##
-
-```
-cd /Users/MyPlace/workspace/javascript
-express install -t ejs chat
-```
-
 ## Deploy with Heroku ##
 
-When deploying whith Heroku, there are few steps you have to folloewd for application to work.
+When deploying whith Heroku, there are few steps you have to followed for application to work.
 
 ### Enable sockets　###
 
@@ -43,7 +36,7 @@ heroku labs:enable websockets
 
 > more details here : https://devcenter.heroku.com/articles/node-websockets
 
-###　Port setting　###
+### Port setting　###
 
 Port is defined in "process.env.PORT" :
 
@@ -53,7 +46,7 @@ Port is defined in "process.env.PORT" :
 
 > more details here : https://devcenter.heroku.com/articles/getting-started-with-nodejs#write-your-app
 
-### Add a Procfile in your appli root path (for launching application)　###
+### Add a Procfile file　###
 
 > Add a Procfile in your appli root path (for launching application)
 
@@ -65,7 +58,7 @@ web: node app.js
 > more details here : https://devcenter.heroku.com/articles/getting-started-with-nodejs#declare-process-types-with-procfile
 
 
-###　Create a free MongoDB account ###
+### Create a free MongoDB account ###
 
 Put the  mongolab plugin with :
 

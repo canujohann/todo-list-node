@@ -7,7 +7,7 @@ $(function() {
   ////////////////////////////////////////
 
   //socket connection
-  var socket = io.connect('http://localhost');
+  var socket = io.connect(window.location.hostname);
   socket.on('connect', function() {
     socket.emit('msg update');
   });

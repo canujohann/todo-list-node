@@ -2,19 +2,26 @@
 
 h2. インストール
 
+This sample is based on : 
+
+
 #install nodejs
 #install mongodb
 
-h2. mongoDB 初期設定
-#mongodb setting
+h2. mongoDB settings
+
+# create if not exists
 sudo mkdir -p /data/db/
 sudo chown `id -u` /data/db
+
+#start mongodb
 mongod
 
-h2. 必要なライブラリー
+h2. install librairies
 npm install socket.io
 npm install mongoose
 
-#expressプロジェクト作成
-cd /Users/johann/Desktop/
+h2. Create a new express project
+
+cd /Users/MyPlace/workspace/javascript
 express install -t ejs chat

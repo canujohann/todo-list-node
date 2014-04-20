@@ -25,29 +25,33 @@ app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-
 // in production mode, debug information not diplayed
 app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
 
-//basic authentification
+//Basic Authentification
 var auth = express.basicAuth(function(user, pass) {     
    return (user == "johann" && pass == "8862");
 },'Secret Area');
 
-// Routes
+// Routes (just one)
 app.get('/', auth, routes.index);
 
+//listen application on defined port
+//"process.env.PORT" is necessary when deploying in heroku env.
 app.listen(process.env.PORT || 4000 , function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
-//for only
+//Set the db path
+//"MONGOLAB_URI" is for Mongolab with heroku
+//"MONGOHQ_URL" is for mongoHQ with heroku
+// chat_app is for our localhost
 var mongoUri = process.env.MONGOLAB_URI ||
   process.env.MONGOHQ_URL ||
-  'mongodb://localhost/chat_app';
+  'mongodb://localhost/todolist_app';
 
 // MongoDB connection through mongoose
 mongoose.connect(mongoUri, function (err, res) {
@@ -58,17 +62,20 @@ mongoose.connect(mongoUri, function (err, res) {
   }
 });
 
-//create schema
+//Create a schema
 var Schema = mongoose.Schema;
 
-// User model
-var UserSchema = new Schema({
+// User schema (model)
+var MessageSchema = new Schema({
   message: String,
   date: Date
 });
 
-mongoose.model('User', UserSchema);
-var User = mongoose.model('User');
+//Add user schema to the mongoose models
+mongoose.model('Message', MessageSchema);
+
+// get the class for the model
+var Message = mongoose.model('Message');
 
 //socket for update db
 var io = require('socket.io').listen(app);
@@ -77,25 +84,22 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('msg update', function(){
     //render message
-    User.find(function(err, docs){
+    Message.find(function(err, docs){
       socket.emit('msg open', docs);
     });
   });
 
-  console.log('connected');
-
   socket.on('msg send', function (msg) {
     
-    //DBに登録
-    var user = new User();
-    user.message  = msg;
-    user.date = new Date();
-    user.save(function(err) {
-
+    //Save in DB
+    var message = new Message();
+    message.message  = msg;
+    message.date = new Date();
+    message.save(function(err) {
       if (err) { 
         console.log(err); 
       }else{
-        socket.emit('msg push', user);
+        socket.emit('msg push', message);
         socket.broadcast.emit('msg push', msg);
       }
 
@@ -103,18 +107,18 @@ io.sockets.on('connection', function (socket) {
 
   });
 
-  //DBにあるメッセージを削除
-  socket.on('delete msg', function(userId){
-
-    User.findOne( {'_id': userId}, function(err,doc){
+  //Delete from DB
+  socket.on('delete msg', function(messageId){
+    Message.findOne( {'_id': messageId}, function(err,doc){
       doc.remove();
-      socket.emit('db drop', userId);
-      socket.broadcast.emit('db drop', userId);
+      socket.emit('db drop', messageId);
+      socket.broadcast.emit('db drop', messageId);
     });
     
     
   });
 
+  //when disconnected
   socket.on('disconnect', function() {
     console.log('disconnected');
   });

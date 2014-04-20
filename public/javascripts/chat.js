@@ -39,7 +39,12 @@ $(function() {
   //Add memo (receive)
   socket.on('msg push', function (user) {
     var date = new Date();
+
+    //add new task
     $('#list').prepend($(　addOneRow(user)));
+
+    //initialize message input
+    $("#message").val("");
   });
 
 
@@ -58,8 +63,8 @@ $(function() {
  }
 
 
-  //-------------
 
+  //Delete memo (send)
   $("#list > tbody > tr > td > div").live('click', function(){
     var id = $(this).attr("id") ;
     socket.emit('delete msg', id);

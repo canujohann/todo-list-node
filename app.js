@@ -38,6 +38,11 @@ app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
+//for only
+var mongoUri = process.env.MONGOLAB_URI ||
+  process.env.MONGOHQ_URL ||
+  'mongodb://localhost/chat_app';
+
 // MongoDB connection through mongoose
 var Schema = mongoose.Schema;
 
@@ -46,10 +51,10 @@ var UserSchema = new Schema({
   message: String,
   date: Date
 });
-mongoose.model('User', UserSchema);
-mongoose.connect('mongodb://localhost/chat_app');
-var User = mongoose.model('User');
 
+mongoose.model('User', UserSchema);
+mongoose.connect('mongoUri');
+var User = mongoose.model('User');
 
 //socket for update db
 var io = require('socket.io').listen(app);

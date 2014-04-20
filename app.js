@@ -31,8 +31,14 @@ app.configure('production', function(){
   app.use(express.errorHandler());
 });
 
+
+//basic authentification
+var auth = express.basicAuth(function(user, pass) {     
+   return (user == "johann" && pass == "8862");
+},'Secret Area');
+
 // Routes
-app.get('/', routes.index);
+app.get('/', auth, routes.index);
 
 app.listen(process.env.PORT || 4000 , function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

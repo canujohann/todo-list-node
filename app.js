@@ -44,16 +44,24 @@ var mongoUri = process.env.MONGOLAB_URI ||
   'mongodb://localhost/chat_app';
 
 // MongoDB connection through mongoose
+mongoose.connect(mongoUri, function (err, res) {
+  if (err) {
+  console.log ('ERROR connecting to: ' + mongoUri + '. ' + err);
+  } else {
+  console.log ('Succeeded connected to: ' + mongoUri);
+  }
+});
+
+//create schema
 var Schema = mongoose.Schema;
 
-//User schema
+// User model
 var UserSchema = new Schema({
   message: String,
   date: Date
 });
 
 mongoose.model('User', UserSchema);
-mongoose.connect('mongoUri');
 var User = mongoose.model('User');
 
 //socket for update db
